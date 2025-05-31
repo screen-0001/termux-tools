@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>أدوات Termux - تصميم جديد كليًا</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: #121212;
+    color: #eee;
+    font-family: 'Cairo', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  header h1 {
+    font-size: 2.8rem;
+    letter-spacing: 2px;
+    color: #4caf50;
+    margin: 0 0 10px 0;
+  }
+
+  header p {
+    font-size: 1.1rem;
+    color: #aaa;
+  }
+
+  #searchInput {
+    width: 100%;
+    max-width: 480px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 10px #4caf50aa;
+    background-color: #1e1e1e;
+    color: #eee;
+    margin-bottom: 40px;
+    transition: box-shadow 0.3s ease;
+  }
+
+  #searchInput:focus {
+    box-shadow: 0 0 15px #4caf50ff;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .tool-card {
+    background: #1f1f1f;
+    border-radius: 16px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 25px #0008;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .tool-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px #4caf5080;
+  }
+
+  .tool-card h2 {
+    margin: 0 0 15px 0;
+    font-size: 1.6rem;
+    color: #4caf50;
+  }
+
+  .tool-card p {
+    flex-grow: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: 18px;
+  }
+
+  .code-block {
+    background-color: #2a2a2a;
+    color: #b8f3b8;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    user-select: all;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-bottom: 12px;
+  }
+
+  .btn-copy {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    border-radius: 50px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-copy:hover {
+    background-color: #388e3c;
+  }
+
+  /* زر العودة للأعلى */
+  #backToTop {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 14px 18px;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #0008;
+    display: none;
+    z-index: 100;
+    transition: background-color 0.3s ease;
+  }
+
+  #backToTop:hover {
+    background-color: #388e3c;
+  }
+</style>
+</head>
+<body>
+
+<header style="text-align: center; padding: 10px;">
+<img src="https://raw.githubusercontent.com/screen-0001/termux-tools/refs/heads/main/ChatGPT%20Image%2031%20%D9%85%D8%A7%D9%8A%D9%88%202025%D8%8C%2008_46_06%20%D8%B5.png" alt="شعار الموقع" style="width: 200px;">
+  
+  <p>اختر الأداة لمعرفة طريقة تثبيتها ومميزاتها بسهولة</p>
+</header>
+
+<input type="text" id="searchInput" placeholder="ابحث عن أداة..." onkeyup="filterTools()" />
+
+<section class="tools-grid">
+
+  <article class="tool-card" tabindex="0">
+    <h2>زفيشر Zphisher</h2>
+    <p>أداة لاختبار اختراق مواقع تسجيل الدخول عبر واجهات تصيد محدثة ومتطورة.</p>
+    <pre class="code-block">pkg update && pkg upgrade
+pkg install git
+git clone https://github.com/htr-tech/zphisher
+cd zphisher
+bash zphisher.sh</pre>
+    <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+  </article>
+
+  <article class="tool-card" tabindex="0">
+    <h2>ماليسيوس Malicious</h2>
+    <p>أداة لإدارة وتحليل البرمجيات الخبيثة على Termux بسهولة.</p>
+    <pre class="code-block">pkg update && pkg upgrade
+pkg install python
+pip install malicious
+malicious --help</pre>
+    <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+  </article>
+
+  <article class="tool-card" tabindex="0">
+    <h2>إنجروك Ngrok</h2>
+    <p>أداة لإنشاء نفق آمن للوصول إلى جهازك عبر الإنترنت بشكل سهل وسريع.</p>
+    <pre class="code-block">pkg install ngrok
+ngrok authtoken YOUR_AUTHTOKEN
+ngrok tcp 8080</pre>
+    <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+  </article>
+
+<article class="tool-card" tabindex="0">
+  <h2>نانو Nano</h2>
+  <p>محرر نصوص بسيط وسهل الاستخدام داخل الطرفية.</p>
+  <pre class="code-block">pkg install nano
+nano filename.txt</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>ميتاسبلويت Metasploit</h2>
+  <p>أداة اختبار اختراق شاملة وقوية جدًا.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install unstable-repo
+pkg install metasploit
+msfconsole</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>وايركراك Aircrack-ng</h2>
+  <p>أداة لاختبار اختراق شبكات الواي فاي.</p>
+  <pre class="code-block">pkg install root-repo
+pkg install aircrack-ng
+aircrack-ng --help</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>توكس توكس Tox</h2>
+  <p>أداة دردشة مشفرة وآمنة على Termux.</p>
+  <pre class="code-block">pkg install tox
+tox-cli --help</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>ويفي-هات Wifi-Hotspot</h2>
+  <p>إنشاء نقطة اتصال واي فاي مباشرة من Termux.</p>
+  <pre class="code-block">pkg install termux-wifi-hotspot
+termux-wifi-hotspot start MyHotspot</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>ميتاسبلويت Metasploit</h2>
+  <p>أداة قوية لاختبار الاختراق وتحليل الثغرات الأمنية في الأنظمة والشبكات.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install unstable-repo
+pkg install metasploit
+msfconsole</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>ان ماب Nmap</h2>
+  <p>أداة لفحص الشبكات واكتشاف الأجهزة المفتوحة والخدمات على الشبكة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install nmap
+nmap -v -A target_ip</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>هيدرا Hydra</h2>
+  <p>أداة لكسر كلمات السر باستخدام هجمات القوة الغاشمة على البروتوكولات المختلفة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install hydra
+hydra -L users.txt -P passwords.txt target_ip ssh</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>اس كيو ال ماب SQLmap</h2>
+  <p>أداة لاكتشاف واستغلال ثغرات حقن SQL في تطبيقات الويب.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install python
+pip install sqlmap
+sqlmap -u "http://target.com/vuln.php?id=1" --batch</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>وايرشارك Wireshark</h2>
+  <p>أداة لتحليل حركة الشبكة والتقاط الحزم الشبكية لفحص الأخطاء أو التحليل الأمني.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install wireshark
+wireshark</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>كيرل Curl</h2>
+  <p>أداة لتحميل الملفات والتفاعل مع الشبكات عبر بروتوكولات متعددة مثل HTTP، FTP.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install curl
+curl https://example.com/file.zip -o file.zip</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>اف اف ام بي جي FFmpeg</h2>
+  <p>أداة قوية لتحويل الفيديوهات والصوتيات وتحريرها من خلال سطر الأوامر.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install ffmpeg
+ffmpeg -i input.mp4 output.avi</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>بيثون Python</h2>
+  <p>لغة برمجة شائعة ومهمة لتشغيل السكربتات وأتمتة المهام في Termux.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install python</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>جيت Git</h2>
+  <p>أداة التحكم بالإصدارات وتحميل المشاريع من GitHub وغيره.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install git</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>وين ديف WinDivert (بديل N/A على Termux)</h2>
+  <p>أداة لالتقاط وتصفية الحزم الشبكية (تستخدم أدوات أخرى مشابهة في Termux).</p>
+  <pre class="code-block">لا يتوفر مباشرة، يمكن استخدام tcpdump أو wireshark بدلاً منه</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>بنج Ping</h2>
+  <p>أداة لفحص اتصال الشبكة وسرعة الاستجابة بين جهازك وخوادم الإنترنت.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install inetutils
+ping google.com</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>تيرمكس ترم (Termux-API)</h2>
+  <p>يوفر وصول للأجهزة ومزايا الهاتف مثل الكاميرا، الجي بي إس، الاهتزاز وغيرها.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install termux-api
+termux-camera-photo</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>تيمكس ترمكس واي فاي ماينر WiFi-Analyzer</h2>
+  <p>أداة لتحليل الشبكات اللاسلكية والتعرف على نقاط الاتصال القريبة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install wifite
+wifite</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>ميدوسا Medusa</h2>
+  <p>أداة لكسر كلمات السر باستخدام هجمات القوة الغاشمة على الخدمات الشبكية.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install medusa</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>تيرمكس ويب Tmux</h2>
+  <p>مدير نوافذ طرفية متعدد الجلسات لتشغيل أوامر متعددة في وقت واحد.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install tmux
+tmux</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>نانو Nano</h2>
+  <p>محرر نصوص بسيط وسهل الاستخدام من الطرفية.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install nano
+nano filename.txt</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>فيرسكل Veil-Framework</h2>
+  <p>أداة لتوليد برمجيات خبيثة مقاومة لكشف مضادات الفيروسات.</p>
+  <pre class="code-block">git clone https://github.com/Veil-Framework/Veil.git
+cd Veil/
+./install.sh
+./Veil.py</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>هوش Htop</h2>
+  <p>أداة مراقبة موارد النظام والعمليات بشكل رسومي داخل الطرفية.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install htop
+htop</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>ميتاسبلويت Metasploit</h2>
+  <p>إطار عمل لاختبار الاختراق مع أدوات متقدمة لاختراق الأنظمة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install unstable-repo
+pkg install metasploit
+msfconsole</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>إن ماب Nmap</h2>
+  <p>أداة لفحص الشبكات واكتشاف الأجهزة المفتوحة والخدمات على الشبكة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install nmap
+nmap -v -A target_ip</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>هيدرا Hydra</h2>
+  <p>أداة لكسر كلمات السر باستخدام هجمات القوة الغاشمة على البروتوكولات المختلفة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install hydra
+hydra -L users.txt -P passwords.txt target_ip ssh</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>أس كيو إل ماب SQLmap</h2>
+  <p>أداة لاكتشاف واستغلال ثغرات حقن SQL في تطبيقات الويب.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install python
+pip install sqlmap
+sqlmap -u "http://target.com/vuln.php?id=1" --batch</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>وايرشارك Wireshark</h2>
+  <p>أداة لتحليل حركة الشبكة والتقاط الحزم الشبكية لفحص الأخطاء أو التحليل الأمني.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install wireshark
+wireshark</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>كيرل Curl</h2>
+  <p>أداة لتحميل الملفات والتفاعل مع الشبكات عبر بروتوكولات متعددة مثل HTTP، FTP.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install curl
+curl https://example.com/file.zip -o file.zip</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>اف اف ام بي جي FFmpeg</h2>
+  <p>أداة قوية لتحويل الفيديوهات والصوتيات وتحريرها من خلال سطر الأوامر.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install ffmpeg
+ffmpeg -i input.mp4 output.avi</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>توراتور Tor</h2>
+  <p>شبكة لإخفاء الهوية وتصفح الإنترنت بشكل مجهول وآمن.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install tor
+tor</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>توكسوكس Tox</h2>
+  <p>برنامج تواصل آمن ومشفر بديل للواتساب والدردشة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install tox</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>بروتو Nethogs</h2>
+  <p>أداة مراقبة استخدام الشبكة لكل برنامج على حدة.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install nethogs
+nethogs</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+<article class="tool-card" tabindex="0">
+  <h2>تور Torsocks</h2>
+  <p>توجيه الاتصالات عبر شبكة Tor لإخفاء الهوية.</p>
+  <pre class="code-block">pkg update && pkg upgrade
+pkg install torsocks
+torsocks curl https://check.torproject.org</pre>
+  <button class="btn-copy" onclick="copyCode(this)">نسخ الكود</button>
+</article>
+
+
+</section>
+
+<button id="backToTop" onclick="scrollToTop()" title="العودة للأعلى">⬆️</button>
+
+<script>
+  // نسخ نص الكود
+function copyCode(button) {
+  const codeBlock = button.previousElementSibling;
+  const text = codeBlock.textContent;
+
+  // جرب أولاً Clipboard API الحديثة
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      button.textContent = 'تم النسخ ✓';
+      setTimeout(() => { button.textContent = 'نسخ الكود'; }, 1500);
+    }).catch(() => fallbackCopy(text, button));
+  } else {
+    fallbackCopy(text, button);
+  }
+}
+
+function fallbackCopy(text, button) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      button.textContent = 'تم النسخ ✓';
+      setTimeout(() => { button.textContent = 'نسخ الكود'; }, 1500);
+    } else {
+      alert('فشل النسخ، يرجى النسخ يدوياً.');
+    }
+  } catch (err) {
+    alert('حدث خطأ أثناء النسخ.');
+  }
+  document.body.removeChild(textarea);
+}
+
+  // تصفية الأدوات بالبحث
+  function filterTools() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const tools = document.querySelectorAll('.tool-card');
+    tools.forEach(tool => {
+      const text = tool.textContent.toLowerCase();
+      tool.style.display = text.includes(filter) ? '' : 'none';
+    });
+  }
+
+  // زر العودة للأعلى
+  const backToTopBtn = document.getElementById('backToTop');
+  window.onscroll = function() {
+    backToTopBtn.style.display = (window.scrollY > 300) ? 'block' : 'none';
+  };
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
